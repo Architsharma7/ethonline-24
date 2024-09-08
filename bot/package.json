@@ -8,6 +8,7 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
+    "@stackso/js-core": "^0.4.16",
     "@xmtp/message-kit": "latest",
     "firebase": "^10.13.1",
     "openai": "^4.58.1"

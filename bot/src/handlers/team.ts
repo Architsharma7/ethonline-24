@@ -1,12 +1,6 @@
 import { HandlerContext } from "@xmtp/message-kit";
-import {
-  teams,
-  gameConversation,
-  MAX_TEAM_SIZE,
-  MIN_TEAM_SIZE,
-  Team,
-} from "../types";
-import { getTeamByName, setTeam } from "../lib/db";
+import { teams, MAX_TEAM_SIZE, MIN_TEAM_SIZE, Team } from "../types";
+import { getTeamByName, setTeam, getTeams } from "../lib/db";
 
 export async function createTeam(context: HandlerContext) {
   const {
@@ -22,8 +16,12 @@ export async function createTeam(context: HandlerContext) {
     return;
   }
 
-  const existingTeam = await getTeamByName(teamName);
-  if (existingTeam) {
+  const allTeams = await getTeams();
+  const userExistingTeam = Object.values(allTeams).find((team) =>
+    team.members.some((member) => member.address === sender.address)
+  );
+
+  if (userExistingTeam) {
     await context.reply(
       "You are already in a team. Leave your current team before creating a new one."
     );
@@ -38,7 +36,7 @@ export async function createTeam(context: HandlerContext) {
 
   await setTeam(teamName, newTeam);
 
-  await gameConversation?.send(
+  await context.conversation.send(
     `Team "${teamName}" has been created and joined the game!`
   );
   await context.reply(
@@ -68,6 +66,17 @@ export async function joinTeam(context: HandlerContext) {
     return;
   }
 
+  const allTeams = await getTeams();
+  const userExistingTeam = Object.values(allTeams).find((t) =>
+    t.members.some((member) => member.address === sender.address)
+  );
+  if (userExistingTeam) {
+    await context.reply(
+      "You are already in a team. Leave your current team before joining a new one."
+    );
+    return;
+  }
+
   if (team.members.length >= MAX_TEAM_SIZE) {
     await context.reply(
       `Team "${teamName}" is already full (${MAX_TEAM_SIZE} members). Please join or create another team.`
@@ -77,7 +86,8 @@ export async function joinTeam(context: HandlerContext) {
 
   team.members.push(sender);
   await setTeam(teamName, team);
-  await gameConversation?.send(
+
+  await context.conversation.send(
     `${sender.username} has joined team "${teamName}"!`
   );
 

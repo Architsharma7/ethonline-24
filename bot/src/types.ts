@@ -18,6 +18,17 @@ export interface Team {
   points: number;
 }
 
+export interface LeaderboardEntry {
+  address: string;
+  points: number;
+}
+
+export interface TeamScore {
+  teamName: string;
+  totalPoints: number;
+  members: string[];
+}
+
 export let teams: { [teamName: string]: Team } = {};
 export let gameConversation: Conversation | null = null;
 export interface currentPuzzle {
