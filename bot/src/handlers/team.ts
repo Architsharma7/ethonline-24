@@ -114,3 +114,45 @@ export async function joinTeam(context: HandlerContext) {
     );
   }
 }
+
+export async function listTeams(context: HandlerContext) {
+  try {
+    const teams = await getTeams();
+
+    if (Object.keys(teams).length === 0) {
+      await context.reply(
+        "There are no teams registered yet. Be the first to create a team!"
+      );
+      return;
+    }
+
+    let teamList = "📋 Registered Teams:\n\n";
+
+    for (const [teamName, team] of Object.entries(teams)) {
+      const memberCount = team.members.length;
+      const availableSlots = MAX_TEAM_SIZE - memberCount;
+
+      teamList += `🏴‍☠️ ${teamName}\n`;
+      teamList += `   Members (${memberCount}/${MAX_TEAM_SIZE}): ${team.members
+        .map((m) => m.username)
+        .join(", ")}\n`;
+
+      if (availableSlots > 0) {
+        teamList += `   Slots available: ${availableSlots}\n`;
+      } else {
+        teamList += `   Team is full\n`;
+      }
+
+      teamList += `   Points: ${team.points}\n\n`;
+    }
+
+    teamList += "To join a team, use the command: /join_team [team_name]";
+
+    await context.reply(teamList);
+  } catch (error) {
+    console.error("Error fetching team list:", error);
+    await context.reply(
+      "An error occurred while fetching the team list. Please try again later."
+    );
+  }
+}

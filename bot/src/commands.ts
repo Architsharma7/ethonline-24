@@ -1,13 +1,14 @@
 import type { CommandGroup, CommandHandlers } from "@xmtp/message-kit";
-import { createTeam, joinTeam, managePortfolio } from "./handlers/team";
+import { createTeam, joinTeam, listTeams } from "./handlers/team";
 import { postDailyInsight, solvePuzzle } from "./handlers/puzzle";
-import {showLeaderboard} from "./handlers/leaderboard";
+import { showLeaderboard } from "./handlers/leaderboard";
 
 export const commandHandlers: CommandHandlers = {
   "/create_team": createTeam,
   "/join_team": joinTeam,
   "/solve_puzzle": solvePuzzle,
-  "/portfolio": managePortfolio,
+  // "/portfolio": managePortfolio,
+  "/list_teams": listTeams,
   "/leaderboard": showLeaderboard,
   "/daily_insight": postDailyInsight,
 };
@@ -33,21 +34,26 @@ export const commands: CommandGroup[] = [
         },
       },
       {
+        command: "/list_teams",
+        description: "List the teams in the game",
+        params: {},
+      },
+      {
         command: "/solve_puzzle [answer]",
         description: "Submit an answer to the current puzzle",
         params: {
           answer: { type: "string" },
         },
       },
-      {
-        command: "/portfolio [action] [protocol] [amount]",
-        description: "Manage your team's DeFi portfolio",
-        params: {
-          action: { type: "string", values: ["invest", "withdraw"] },
-          protocol: { type: "string" },
-          amount: { type: "number" },
-        },
-      },
+      // {
+      //   command: "/portfolio [action] [protocol] [amount]",
+      //   description: "Manage your team's DeFi portfolio",
+      //   params: {
+      //     action: { type: "string", values: ["invest", "withdraw"] },
+      //     protocol: { type: "string" },
+      //     amount: { type: "number" },
+      //   },
+      // },
       {
         command: "/leaderboard",
         description: "View the current leaderboard",
@@ -64,5 +70,5 @@ export const commands: CommandGroup[] = [
 
 export const appConfig = {
   commands: commands,
-  commandHandlers: commandHandlers
+  commandHandlers: commandHandlers,
 };
