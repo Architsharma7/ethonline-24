@@ -1,7 +1,7 @@
 import { HandlerContext } from "@xmtp/message-kit";
-import { getStackClient } from "../lib/stack";
-import { TeamScore, LeaderboardEntry, Team } from "../types";
-import { getTeams } from "../lib/db";
+import { getStackClient } from "../lib/stack.js";
+import { TeamScore, LeaderboardEntry, Team } from "../types.js";
+import { getTeams } from "../lib/db.js";
 
 export async function showLeaderboard(context: HandlerContext) {
   const stackClient = getStackClient();

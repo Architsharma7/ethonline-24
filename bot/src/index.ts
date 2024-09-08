@@ -1,13 +1,12 @@
 import { run, HandlerContext } from "@xmtp/message-kit";
-import { appConfig } from "./commands";
-import { initializeStackClient } from "./lib/stack";
+import { appConfig, commandHandlers } from "./commands.js";
+import { initializeStackClient } from "./lib/stack.js";
 import {
   setupScheduler,
   postDailyInsight,
   postNewPuzzle,
-} from "./handlers/puzzle";
-import { getCurrentPuzzle } from "./lib/db";
-import { commandHandlers } from "./commands";
+} from "./handlers/puzzle.js";
+import { getCurrentPuzzle } from "./lib/db.js";
 
 let isInitialized = false;
 
@@ -19,24 +18,29 @@ run(async (context: HandlerContext) => {
 
   await checkAndPostPuzzle(context);
 
-  const {
-    message: { content, typeId },
-  } = context;
-
-  if (typeId === "text" && content.startsWith("/")) {
-    const [command] = content.split(" ");
-    const handler = commandHandlers[command];
-    if (handler) {
-      await handler(context);
-    } else {
-      await context.reply("Unknown command. Type 'gm' for a list of commands.");
-    }
-    return;
-  }
+  const { message } = context;
+  const { content, typeId } = message;
 
   if (typeId === "text") {
-    await handleRegularMessage(context);
-    return;
+    const textContent = content.content;
+
+    if (typeof textContent === "string") {
+      if (textContent.startsWith("/")) {
+        const [command] = textContent.split(" ");
+        const handler = commandHandlers[command];
+        if (handler) {
+          await handler(context);
+        } else {
+          await context.reply(
+            "Unknown command. Type 'gm' for a list of commands."
+          );
+        }
+      } else {
+        await handleRegularMessage(context, textContent);
+      }
+    }
+  } else {
+    console.log(`Received message of type: ${typeId}`);
   }
 }, appConfig);
 
@@ -47,10 +51,7 @@ async function initializeGame(context: HandlerContext) {
   setupScheduler(context);
 }
 
-async function handleRegularMessage(context: HandlerContext) {
-  const {
-    message: { content },
-  } = context;
+async function handleRegularMessage(context: HandlerContext, content: string) {
   const lowerContent = content.toLowerCase();
 
   if (lowerContent.includes("gm")) {

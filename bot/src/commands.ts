@@ -1,7 +1,7 @@
 import type { CommandGroup, CommandHandlers } from "@xmtp/message-kit";
-import { createTeam, joinTeam, listTeams } from "./handlers/team";
-import { postDailyInsight, solvePuzzle } from "./handlers/puzzle";
-import { showLeaderboard } from "./handlers/leaderboard";
+import { createTeam, joinTeam, listTeams } from "./handlers/team.js";
+import { postDailyInsight, solvePuzzle } from "./handlers/puzzle.js";
+import { showLeaderboard } from "./handlers/leaderboard.js";
 
 export const commandHandlers: CommandHandlers = {
   "/create_team": createTeam,

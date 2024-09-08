@@ -1,6 +1,6 @@
 import { HandlerContext } from "@xmtp/message-kit";
-import { teams, MAX_TEAM_SIZE, MIN_TEAM_SIZE, Team } from "../types";
-import { getTeamByName, setTeam, getTeams } from "../lib/db";
+import { teams, MAX_TEAM_SIZE, MIN_TEAM_SIZE, Team } from "../types.js";
+import { getTeamByName, setTeam, getTeams } from "../lib/db.js";
 
 export async function createTeam(context: HandlerContext) {
   const {

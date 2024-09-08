@@ -1,5 +1,5 @@
-import { db } from "../firebase/config";
-import { Team, currentPuzzle } from "../types";
+import { db } from "../firebase/config.js";
+import { Team, currentPuzzle } from "../types.js";
 import {
   collection,
   doc,

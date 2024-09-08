@@ -1,9 +1,9 @@
-import { textGeneration } from "../lib/openai";
-import { db } from "../firebase/config";
+import { textGeneration } from "../lib/openai.js";
+import { db } from "../firebase/config.js";
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { HandlerContext } from "@xmtp/message-kit";
-import { getTeams, setTeam } from "../lib/db";
-import { getStackClient } from "../lib/stack";
+import { getTeams, setTeam } from "../lib/db.js";
+import { getStackClient } from "../lib/stack.js";
 
 export async function generateCryptoPuzzle(): Promise<{
   riddle: string;
@@ -62,6 +62,18 @@ export async function clearCurrentPuzzle() {
   await deleteDoc(doc(db, "gameState", "currentPuzzle"));
 }
 
+export async function getPuzzle(context: HandlerContext) {
+  const currentPuzzle = await getCurrentPuzzle();
+  if (!currentPuzzle) {
+    await context.reply("There is no active puzzle right now.");
+    return;
+  }
+
+  await context.reply(
+    `🧩 Current Puzzle:\n${currentPuzzle.riddle}\n\nUse /solve_puzzle [your answer] to submit your solution!`
+  );
+}
+
 export async function solvePuzzle(context: HandlerContext) {
   const {
     sender,
@@ -106,7 +118,7 @@ export async function solvePuzzle(context: HandlerContext) {
         account: sender.address,
         uniqueId: `puzzle_${currentPuzzle.riddle.substring(0, 20)}`,
         metadata: {
-          teamName: teamName, 
+          teamName: teamName,
         },
       });
     } catch (error) {
