@@ -51,8 +51,6 @@ export async function postDailyInsight(context: HandlerContext) {
 export function setupScheduler(context: HandlerContext) {
   setInterval(() => postNewPuzzle(context), 6 * 60 * 60 * 1000);
   setInterval(() => postDailyInsight(context), 24 * 60 * 60 * 1000);
-  postNewPuzzle(context);
-  postDailyInsight(context);
 }
 
 export async function getCurrentPuzzle() {

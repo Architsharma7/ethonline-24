@@ -1,5 +1,3 @@
-import { Conversation } from "@xmtp/xmtp-js";
-
 type User = {
   inboxId: string;
   username: string;
@@ -30,7 +28,6 @@ export interface TeamScore {
 }
 
 export let teams: { [teamName: string]: Team } = {};
-export let gameConversation: Conversation | null = null;
 export interface currentPuzzle {
   riddle: string;
   answer: string;
