@@ -8,7 +8,9 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
-    "@xmtp/message-kit": "latest"
+    "@xmtp/message-kit": "latest",
+    "firebase": "^10.13.1",
+    "openai": "^4.58.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.3",

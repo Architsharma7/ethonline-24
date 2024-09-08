@@ -1,4 +1,5 @@
 import { run, HandlerContext } from "@xmtp/message-kit";
+import { appConfig } from "./commands";
 
 run(async (context: HandlerContext) => {
   // Get the message and the address from the sender
@@ -8,4 +9,4 @@ run(async (context: HandlerContext) => {
   // To reply, just call `reply` on the HandlerContext.
   const reply = await context.reply("Your message.");
   console.log(reply);
-});
+}, appConfig);
